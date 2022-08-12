@@ -1,4 +1,5 @@
 # Hamera
+__Supported by__ ___Python 3.10___
 
 ## Installation
 ```bash
