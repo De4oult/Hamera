@@ -1,5 +1,6 @@
 from cvzone.SelfiSegmentationModule import SelfiSegmentation 
 from random import randint
+import pyvirtualcam
 import numpy as np
 import time
 import cv2
@@ -104,13 +105,17 @@ def framerate(start_time):
         1
     )
 
-while True:
-    _, frame = cap.read()
-    result = frame.copy()
+def matrix_bg():
+    with pyvirtualcam.Camera(width=1920, height=1080, fps=20) as cam:
+        print(f'Using virtual camera: {cam.device}')
+        
+        while True:
+            _, frame = cap.read()
+            result = frame.copy()
 
-    matrix(result)
-    framerate(fps_start_time)
+            matrix(result)
+            framerate(fps_start_time)
 
-    cv2.imshow('ASCII Webcam', matrix_win)
+            cv2.imshow('ASCII Webcam', matrix_win)
 
-    cv2.waitKey(1)
+            cv2.waitKey(1)

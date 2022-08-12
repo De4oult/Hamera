@@ -8,6 +8,10 @@ opencv-python = "*"
 numpy = "*"
 cvzone = "*"
 mediapipe = "*"
+pyvirtualcam = "*"
+utils = "*"
+pillow = "*"
+av = "*"
 
 [dev-packages]
 

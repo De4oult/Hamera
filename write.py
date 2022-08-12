@@ -1,12 +1,11 @@
 from cvzone.SelfiSegmentationModule import SelfiSegmentation 
 import numpy as np
-import time
 import cv2
 
 cap = cv2.VideoCapture(0 + cv2.CAP_DSHOW) # Windows
 segmenter = SelfiSegmentation(1)
 
-WIDTH, HEIGHT = 800, 600
+WIDTH, HEIGHT = 1920, 1080
 cap.set(cv2.CAP_PROP_FRAME_WIDTH, WIDTH)
 cap.set(cv2.CAP_PROP_FRAME_HEIGHT, HEIGHT)
 
@@ -18,8 +17,6 @@ chars = " .,-~:;=!*#$@"
 norm = 255 / len(chars)
 font = cv2.FONT_HERSHEY_SIMPLEX
 font_size = 0.4
-fps_start_time = 0
-fps = 0
 
 def matrix(image):
     global matrix_win
@@ -63,36 +60,36 @@ def matrix(image):
                 1
             )
 
-def framerate(start_time):
-    global fps_start_time
+def video(frames, filename):
+    if not cap.isOpened():
+        raise IOError("Can't open webcam")
 
-    fps_end_time = time.time()
-    time_diff = fps_end_time - start_time
-    fps = 1 / time_diff
-    fps_start_time = fps_end_time
-    fps_text = "FPS: {:.1f}".format(fps)
-    cv2.putText(
-        matrix_win, 
-        fps_text,
-        (10, 20),
-        font,
-        0.5,
-        (255, 0, 255),
-        1
-    )
+    filename = str(filename) + ".mp4"
 
-def render():
+    fourcc = cv2.VideoWriter_fourcc('H','2','6','4')
+    out = cv2.VideoWriter(filename, fourcc, frames, (WIDTH, HEIGHT))
+
     while True:
         _, frame = cap.read()
         result = frame.copy()
 
         matrix(result)
-        framerate(fps_start_time)
+
+        out.write(matrix_win)
         
-        cv2.imshow('ASCII Webcam', matrix_win)
+        #cv2.imshow('ASCII Webcam', matrix_win)
 
         if cv2.waitKey(1) & 0xFF == 27:
             break
 
     cap.release()
     cv2.destroyAllWindows()
+
+def photo(filename):
+    filename = str(filename) + ".png"
+
+    _, frame = cap.read()
+    result = frame.copy()
+
+    matrix(result)
+    cv2.imwrite(filename, matrix_win)
